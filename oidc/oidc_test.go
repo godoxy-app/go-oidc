@@ -124,6 +124,7 @@ func TestNewProvider(t *testing.T) {
 		wantTokenURL      string
 		wantDeviceAuthURL string
 		wantUserInfoURL   string
+		wantEndSessionURL string
 		wantIssuerURL     string
 		wantAlgorithms    []string
 		wantErr           bool
@@ -135,11 +136,13 @@ func TestNewProvider(t *testing.T) {
 				"authorization_endpoint": "https://example.com/auth",
 				"token_endpoint": "https://example.com/token",
 				"jwks_uri": "https://example.com/keys",
+				"end_session_endpoint": "https://example.com/logout",
 				"id_token_signing_alg_values_supported": ["RS256"]
 			}`,
-			wantAuthURL:    "https://example.com/auth",
-			wantTokenURL:   "https://example.com/token",
-			wantAlgorithms: []string{"RS256"},
+			wantAuthURL:       "https://example.com/auth",
+			wantTokenURL:      "https://example.com/token",
+			wantEndSessionURL: "https://example.com/logout",
+			wantAlgorithms:    []string{"RS256"},
 		},
 		{
 			name: "additional_algorithms",
@@ -148,11 +151,13 @@ func TestNewProvider(t *testing.T) {
 				"authorization_endpoint": "https://example.com/auth",
 				"token_endpoint": "https://example.com/token",
 				"jwks_uri": "https://example.com/keys",
+				"end_session_endpoint": "https://example.com/logout",
 				"id_token_signing_alg_values_supported": ["RS256", "RS384", "ES256", "EdDSA"]
 			}`,
-			wantAuthURL:    "https://example.com/auth",
-			wantTokenURL:   "https://example.com/token",
-			wantAlgorithms: []string{"RS256", "RS384", "ES256", "EdDSA"},
+			wantAuthURL:       "https://example.com/auth",
+			wantTokenURL:      "https://example.com/token",
+			wantEndSessionURL: "https://example.com/logout",
+			wantAlgorithms:    []string{"RS256", "RS384", "ES256", "EdDSA"},
 		},
 		{
 			name: "unsupported_algorithms",

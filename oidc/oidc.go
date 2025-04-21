@@ -100,6 +100,7 @@ type Provider struct {
 	deviceAuthURL string
 	userInfoURL   string
 	jwksURL       string
+	endSessionURL string
 	algorithms    []string
 
 	// Raw claims returned by the server.
@@ -135,6 +136,7 @@ type providerJSON struct {
 	DeviceAuthURL string   `json:"device_authorization_endpoint"`
 	JWKSURL       string   `json:"jwks_uri"`
 	UserInfoURL   string   `json:"userinfo_endpoint"`
+	EndSessionURL string   `json:"end_session_endpoint"`
 	Algorithms    []string `json:"id_token_signing_alg_values_supported"`
 }
 
@@ -162,7 +164,7 @@ var supportedAlgorithms = map[string]bool{
 // parsing.
 //
 //	// Directly fetch the metadata document.
-// 	resp, err := http.Get("https://login.example.com/custom-metadata-path")
+//	resp, err := http.Get("https://login.example.com/custom-metadata-path")
 //	if err != nil {
 //		// ...
 //	}
@@ -202,6 +204,12 @@ type ProviderConfig struct {
 	// available.
 	JWKSURL string `json:"jwks_uri"`
 
+	// EndSessionURL is the endpoint used by the provider to support the OpenID
+	// Connect HTTP-based logout flow.
+	//
+	// https://openid.net/specs/openid-connect-logout-1_0-04.html#RPInitiated
+	EndSessionURL string `json:"end_session_endpoint"`
+
 	// Algorithms, if provided, indicate a list of JWT algorithms allowed to sign
 	// ID tokens. If not provided, this defaults to the algorithms advertised by
 	// the JWK endpoint, then the set of algorithms supported by this package.
@@ -221,6 +229,7 @@ func (p *ProviderConfig) NewProvider(ctx context.Context) *Provider {
 		deviceAuthURL: p.DeviceAuthURL,
 		userInfoURL:   p.UserInfoURL,
 		jwksURL:       p.JWKSURL,
+		endSessionURL: p.EndSessionURL,
 		algorithms:    p.Algorithms,
 		client:        getClient(ctx),
 	}
@@ -317,6 +326,12 @@ func (p *Provider) Endpoint() oauth2.Endpoint {
 // provider.
 func (p *Provider) UserInfoEndpoint() string {
 	return p.userInfoURL
+}
+
+// EndSessionEndpoint returns the OpenID Connect end session endpoint for the given
+// provider.
+func (p *Provider) EndSessionEndpoint() string {
+	return p.endSessionURL
 }
 
 // UserInfo represents the OpenID Connect userinfo claims.
