@@ -292,6 +292,7 @@ func NewProvider(ctx context.Context, issuer string) (*Provider, error) {
 		userInfoURL:   p.UserInfoURL,
 		jwksURL:       p.JWKSURL,
 		algorithms:    algs,
+		endSessionURL: p.EndSessionURL,
 		rawClaims:     body,
 		client:        getClient(ctx),
 	}, nil
