@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -151,15 +152,12 @@ func TestKeyVerifyContextCanceled(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ch := make(chan struct{})
-	defer close(ch)
-
 	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		<-ch
+		io.WriteString(w, "{}")
 	}))
 	defer s.Close()
 
-	rks := newRemoteKeySet(ctx, s.URL, nil)
+	rks := newRemoteKeySet(ctx, s.URL)
 
 	cancel()
 
@@ -197,7 +195,7 @@ func testKeyVerify(t *testing.T, good, bad *signingKey, verification ...*signing
 	s := httptest.NewServer(&keyServer{keys: keySet})
 	defer s.Close()
 
-	rks := newRemoteKeySet(ctx, s.URL, nil)
+	rks := newRemoteKeySet(ctx, s.URL)
 
 	// Ensure the token verifies.
 	gotPayload, err := rks.verify(ctx, jws)
@@ -244,7 +242,6 @@ func TestRotation(t *testing.T) {
 	}
 
 	cacheForSeconds := 1200
-	now := time.Now()
 
 	server := &keyServer{
 		keys: jose.JSONWebKeySet{
@@ -257,7 +254,7 @@ func TestRotation(t *testing.T) {
 	s := httptest.NewServer(server)
 	defer s.Close()
 
-	rks := newRemoteKeySet(ctx, s.URL, func() time.Time { return now })
+	rks := newRemoteKeySet(ctx, s.URL)
 
 	if _, err := rks.verify(ctx, jws1); err != nil {
 		t.Errorf("failed to verify valid signature: %v", err)
