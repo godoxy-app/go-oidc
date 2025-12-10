@@ -4,5 +4,5 @@ go 1.25.5
 
 require (
 	github.com/go-jose/go-jose/v4 v4.1.3
-	golang.org/x/oauth2 v0.33.0
+	golang.org/x/oauth2 v0.34.0
 )
