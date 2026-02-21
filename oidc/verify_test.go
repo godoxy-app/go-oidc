@@ -324,7 +324,7 @@ func TestDistributedClaims(t *testing.T) {
 				signKey: newRSAKey(t),
 			},
 			want: map[string]claimSource{
-				"address": claimSource{Endpoint: "123", AccessToken: "1234"},
+				"address": {Endpoint: "123", AccessToken: "1234"},
 			},
 		},
 		{
@@ -347,8 +347,8 @@ func TestDistributedClaims(t *testing.T) {
 				signKey: newRSAKey(t),
 			},
 			want: map[string]claimSource{
-				"address":      claimSource{Endpoint: "123", AccessToken: "1234"},
-				"phone_number": claimSource{Endpoint: "123", AccessToken: "1234"},
+				"address":      {Endpoint: "123", AccessToken: "1234"},
+				"phone_number": {Endpoint: "123", AccessToken: "1234"},
 			},
 		},
 		{
@@ -492,7 +492,6 @@ func TestDistClaimResolver(t *testing.T) {
 			}
 		})
 	}
-
 }
 
 type resolverTest struct {
@@ -516,7 +515,7 @@ type resolverTest struct {
 	wantErr bool
 	want    map[string]claimSource
 
-	//this is the access token that the testEndpoint will accept
+	// this is the access token that the testEndpoint will accept
 	accessToken string
 }
 

@@ -505,7 +505,6 @@ func (ts *testServer) run(t *testing.T) string {
 }
 
 func TestUserInfoEndpoint(t *testing.T) {
-
 	userInfoJSON := `{
 		"sub": "1234567890",
 		"profile": "Joe Doe",
@@ -647,7 +646,6 @@ func TestUserInfoEndpoint(t *testing.T) {
 			}
 		})
 	}
-
 }
 
 type testIssuer struct {
@@ -758,7 +756,6 @@ func TestVerifierAlg(t *testing.T) {
 	if idToken.Subject != "test-user" {
 		t.Errorf("expected subject 'test-user', got: %s", idToken.Subject)
 	}
-
 }
 
 func TestCanceledContext(t *testing.T) {
