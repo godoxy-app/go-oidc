@@ -276,7 +276,7 @@ func NewProvider(ctx context.Context, issuer string) (*Provider, error) {
 		issuerURL = issuer
 	}
 	if p.Issuer != issuerURL && !skipIssuerValidation {
-		return nil, fmt.Errorf("oidc: issuer did not match the issuer returned by provider, expected %q got %q", issuer, p.Issuer)
+		return nil, fmt.Errorf("oidc: issuer URL provided to client (%q) did not match the issuer URL returned by provider (%q)", issuer, p.Issuer)
 	}
 	var algs []string
 	for _, a := range p.Algorithms {
